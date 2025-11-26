@@ -20,17 +20,19 @@ class LoginAuth extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Boy image
-              SizedBox(height: 150),
+              SizedBox(height: 155),
               Container(
-                width: 380,
-                height: 380,
+                width: double.infinity, // take full screen width
+                height: MediaQuery.of(context).size.height * 0.46, // 45% of screen height
                 decoration: const BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage('assets/images/boy.png'),
-                    fit: BoxFit.cover,
+                    fit: BoxFit.contain, // keeps full image visible without cropping
+                    alignment: Alignment.center,
                   ),
                 ),
               ),
+
               Padding(
                 padding: const EdgeInsets.only(
                   left: 27
