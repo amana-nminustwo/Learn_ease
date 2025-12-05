@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:learn_ease/presentation/screens/Homescreen/home.dart';
+import 'package:learn_ease/presentation/screens/Homescreen/home_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -12,14 +12,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'LearnEase',
       builder: EasyLoading.init(),
-      // home: EducationDetailsPage(),
-      // home: LoginAuth(),
-      // home:OtpVerificationPage()
-      // home: RegisterPage(),
-      // home: OnboardingOne(),
-      // home: OnboardingSecond(),
-      // home: OnboardingThird(),
-      home: HomePage(),
+      home: HomeScreen(),
     );
   }
 }

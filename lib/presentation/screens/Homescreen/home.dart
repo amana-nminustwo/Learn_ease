@@ -3,8 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:learn_ease/presentation/screens/Homescreen/widgets/calendar_widget.dart';
 import 'package:learn_ease/presentation/screens/Homescreen/widgets/subject_card.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class Home extends StatelessWidget {
+  const Home({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class HomePage extends StatelessWidget {
         'image': 'assets/images/blue.png',
         'title': 'Programming in Python',
         'description':
-        'Python is a high-level, interpreted programming language known for its simplicity.',
+            'Python is a high-level, interpreted programming language known for its simplicity.',
         'credits': 5,
       },
       {
@@ -22,7 +22,7 @@ class HomePage extends StatelessWidget {
         'image': 'assets/images/pink.png',
         'title': 'Database Management Systems',
         'description':
-        'DBMS provides efficient data management and querying capabilities for complex systems.',
+            'DBMS provides efficient data management and querying capabilities for complex systems.',
         'credits': 4,
       },
       {
@@ -30,7 +30,7 @@ class HomePage extends StatelessWidget {
         'image': 'assets/images/yellow.png',
         'title': 'Operating Systems',
         'description':
-        'An OS manages computer hardware and software resources, providing services to programs.',
+            'An OS manages computer hardware and software resources, providing services to programs.',
         'credits': 3,
       },
       {
@@ -38,7 +38,7 @@ class HomePage extends StatelessWidget {
         'image': 'assets/images/orange.png',
         'title': 'Data Structures',
         'description':
-        'Essential for efficient algorithms and memory optimization in software design.',
+            'Essential for efficient algorithms and memory optimization in software design.',
         'credits': 5,
       },
       {
@@ -46,7 +46,7 @@ class HomePage extends StatelessWidget {
         'image': 'assets/images/green.png',
         'title': 'Computer Networks',
         'description':
-        'Learn how data is transmitted between systems and how networks operate efficiently.',
+            'Learn how data is transmitted between systems and how networks operate efficiently.',
         'credits': 4,
       },
       {
@@ -54,7 +54,7 @@ class HomePage extends StatelessWidget {
         'image': 'assets/images/violet.png',
         'title': 'Machine Learning Basics',
         'description':
-        'Explore algorithms that enable systems to learn patterns and make intelligent decisions.',
+            'Explore algorithms that enable systems to learn patterns and make intelligent decisions.',
         'credits': 5,
       },
     ];
@@ -125,7 +125,8 @@ class HomePage extends StatelessWidget {
                       left: 30,
                       bottom: 25,
                       child: SizedBox(
-                        width: (MediaQuery.of(context).size.width - 40) / 2 - 30,
+                        width:
+                            (MediaQuery.of(context).size.width - 40) / 2 - 30,
                         child: Text(
                           'New Question Papers and Exam Updates for 2025 Batch',
                           maxLines: 3,
