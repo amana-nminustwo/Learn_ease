@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:learn_ease/presentation/screens/Homescreen/home.dart';
 import '../../controllers/Navigation/navigation_controller.dart';
+import '../ModulePage/module_page.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -41,7 +42,11 @@ class HomeScreen extends StatelessWidget {
             index: navController.selectedIndex.value,
             children: const [
               Home(),
-              // Add other pages here, e.g. NotificationsPage(), FilePage(), ProfilePage()
+              SizedBox(),
+              //Notificationpage()
+              // ModulePage(),
+              SizedBox(),
+              //ProfilePage()
             ],
           );
         }),
