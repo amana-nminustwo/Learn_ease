@@ -5,6 +5,7 @@ import 'package:learn_ease/presentation/screens/Homescreen/home.dart';
 import '../../controllers/Navigation/navigation_controller.dart';
 import '../ModulePage/module_page.dart';
 import '../Notification/notification_page.dart';
+import '../question_page/question_page.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -44,7 +45,7 @@ class HomeScreen extends StatelessWidget {
             children: const [
               Home(),
               NotificationPage(),
-              SizedBox(),
+              QuestionPage(),
               SizedBox(),
             ],
           );
