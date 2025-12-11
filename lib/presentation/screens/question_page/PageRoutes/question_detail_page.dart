@@ -33,7 +33,7 @@ class QuestionDetailPage extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
               child: Row(
                 children: [
-                  // Back Button
+                  // 🔹 Back Button
                   Container(
                     width: 44,
                     height: 44,
@@ -41,8 +41,8 @@ class QuestionDetailPage extends StatelessWidget {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: Colors.grey.shade300, // 👈 light grey border
-                        width: 1.5, // thickness of the border
+                        color: Colors.grey.shade300, // light grey border
+                        width: 1.5,
                       ),
                       boxShadow: [
                         BoxShadow(
@@ -60,13 +60,18 @@ class QuestionDetailPage extends StatelessWidget {
                       padding: EdgeInsets.zero,
                     ),
                   ),
+
                   const SizedBox(width: 16),
-                  Text(
-                    title,
-                    style: GoogleFonts.inter(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: GoogleFonts.inter(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
                   ),
                 ],
@@ -76,7 +81,10 @@ class QuestionDetailPage extends StatelessWidget {
             // Question List
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: List.generate(questions.length, (index) {
