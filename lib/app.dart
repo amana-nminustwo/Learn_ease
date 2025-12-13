@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:learn_ease/presentation/screens/Homescreen/home_screen.dart';
-import 'package:learn_ease/presentation/screens/ModulePage/PageRoute/module_desc_page.dart';
-import 'package:learn_ease/presentation/screens/register/register_page.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
