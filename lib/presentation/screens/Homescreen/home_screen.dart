@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:learn_ease/presentation/screens/Homescreen/home.dart';
+import '../../controllers/Home/home_controller.dart';
 import '../../controllers/Navigation/navigation_controller.dart';
-import '../ModulePage/module_page.dart';
 import '../Notification/notification_page.dart';
 import '../profile/profile_page.dart';
 import '../question_page/question_page.dart';
@@ -14,6 +14,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final navController = Get.put(NavigationController());
+    Get.put(HomeController());
 
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(

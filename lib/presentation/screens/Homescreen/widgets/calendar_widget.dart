@@ -1,49 +1,60 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../controllers/Home/home_controller.dart';
 
 class CalendarWidget extends StatelessWidget {
   const CalendarWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    final dates = [17, 18, 19, 20, 21, 22, 23];
-    final bool isSelected = true; // you can later connect it dynamically
+    final controller = Get.find<HomeController>();
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: List.generate(7, (index) {
-        final bool selected = dates[index] == 18; // e.g. current day
-        return Container(
-          width: 45,
-          height: 60,
-          decoration: BoxDecoration(
-            color: selected ? const Color(0xFF8066FF) : Colors.transparent,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                dates[index].toString(),
-                style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: selected ? Colors.white : Colors.black,
-                ),
+    return Obx(() {
+      final weekDates = controller.currentWeekDates;
+      final selectedDate = controller.selectedDate.value;
+
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: List.generate(weekDates.length, (index) {
+          final date = weekDates[index];
+          final bool isSelected =
+              date.day == selectedDate.day && date.month == selectedDate.month;
+
+          return GestureDetector(
+            onTap: () => controller.selectDate(date),
+            child: Container(
+              width: 45,
+              height: 60,
+              decoration: BoxDecoration(
+                color: isSelected ? const Color(0xFF8066FF) : Colors.transparent,
+                borderRadius: BorderRadius.circular(12),
               ),
-              const SizedBox(height: 4),
-              Text(
-                days[index],
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  color: selected ? Colors.white : Colors.grey.shade500,
-                ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    controller.formatDate(date),
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: isSelected ? Colors.white : Colors.black,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    controller.formatDay(date),
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      color: isSelected ? Colors.white : Colors.grey.shade500,
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        );
-      }),
-    );
+            ),
+          );
+        }),
+      );
+    });
   }
 }

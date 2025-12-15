@@ -17,8 +17,8 @@ class AudioMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.end,
       children: [
+        // Play / Pause Button
         GestureDetector(
           onTap: onPlayAudio,
           child: Container(
@@ -34,26 +34,39 @@ class AudioMessage extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 12),
-        Expanded(
+
+        const SizedBox(width: 10),
+
+        // Waveform and duration
+        Flexible(
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
-                children: List.generate(
-                  50,
-                      (index) => Container(
-                    width: 2,
-                    height: (index % 4 + 1) * 5.0,
-                    margin: const EdgeInsets.symmetric(horizontal: 1.2),
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(1),
+              // ✅ Limit width of waveform so it won’t overflow
+              Flexible(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  physics: const NeverScrollableScrollPhysics(),
+                  child: Row(
+                    children: List.generate(
+                      30, // fewer bars for better fit
+                          (index) => Container(
+                        width: 2,
+                        height: (index % 4 + 1) * 5.0,
+                        margin: const EdgeInsets.symmetric(horizontal: 1),
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(1),
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(width: 7),
+
+              const SizedBox(width: 8),
+
+              // Duration text
               Text(
                 audioDuration,
                 style: GoogleFonts.inter(
