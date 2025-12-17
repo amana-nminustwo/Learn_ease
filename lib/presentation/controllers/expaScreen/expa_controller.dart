@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,7 +14,7 @@ class ExpaController extends GetxController {
   final isSending = false.obs;
   final isRecording = false.obs;
   final hasTextInput = false.obs;
-  final scrollController = ScrollController();
+  late final ScrollController scrollController;
 
   final AudioRecorder _audioRecorder = AudioRecorder();
   final AudioPlayer _audioPlayer = AudioPlayer();
@@ -21,23 +22,52 @@ class ExpaController extends GetxController {
   Timer? _recordingTimer;
   final recordingDuration = 0.obs;
 
+  /// Tracks if the user is manually scrolling
+  bool userScrolling = false;
+
+  /// Tracks if initial scroll has been performed
+  bool _hasPerformedInitialScroll = false;
+
   @override
   void onInit() {
     super.onInit();
+    // Create a new ScrollController instance for this controller
+    scrollController = ScrollController();
+
+    // Add scroll listener to detect manual scrolling
+    scrollController.addListener(_onScroll);
+
     _loadMessages();
     _showInitialBotMessage();
   }
 
   @override
   void onClose() {
+    // Properly dispose of listeners and controllers
+    scrollController.removeListener(_onScroll);
+    scrollController.dispose();
     _audioRecorder.dispose();
     _audioPlayer.dispose();
-    scrollController.dispose();
     _recordingTimer?.cancel();
     super.onClose();
   }
 
-  // Load messages from local storage
+  /// Scroll listener to detect manual user interaction
+  void _onScroll() {
+    if (!scrollController.hasClients) return;
+
+    if (scrollController.position.userScrollDirection != ScrollDirection.idle) {
+      userScrolling = true;
+    } else {
+      // Check if user scrolled back to bottom
+      if (scrollController.position.pixels >=
+          scrollController.position.maxScrollExtent - 20) {
+        userScrolling = false;
+      }
+    }
+  }
+
+  /// Load saved chat messages from local storage
   Future<void> _loadMessages() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -56,12 +86,17 @@ class ExpaController extends GetxController {
           };
         }).toList();
       }
+
+      // Jump to the latest message immediately after loading
+      if (messages.isNotEmpty) {
+        _scrollToBottomInitial();
+      }
     } catch (e) {
       print('Error loading messages: $e');
     }
   }
 
-  // Save messages to local storage
+  /// Save messages to SharedPreferences
   Future<void> _saveMessages() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -83,6 +118,7 @@ class ExpaController extends GetxController {
     }
   }
 
+  /// Show welcome message on first load
   void _showInitialBotMessage() async {
     if (messages.isEmpty) {
       await Future.delayed(const Duration(milliseconds: 500));
@@ -96,6 +132,7 @@ class ExpaController extends GetxController {
 
       messages.add(welcomeMessage);
       _scrollToBottom();
+
       final fullText = 'Hi, how can I help you today?';
       for (int i = 0; i <= fullText.length; i++) {
         await Future.delayed(const Duration(milliseconds: 50));
@@ -110,6 +147,7 @@ class ExpaController extends GetxController {
     }
   }
 
+  /// Send user text message
   void sendMessage(String message) async {
     if (message.trim().isEmpty) return;
 
@@ -120,10 +158,11 @@ class ExpaController extends GetxController {
       'isAudio': false,
     });
 
+    userScrolling = false;
     await _saveMessages();
     _scrollToBottom();
 
-    // Simulate bot response with typing indicator
+    // Simulate bot typing
     isSending.value = true;
     await Future.delayed(const Duration(milliseconds: 800));
 
@@ -137,7 +176,6 @@ class ExpaController extends GetxController {
     messages.add(botMessage);
     _scrollToBottom();
 
-    // Animate bot response typing
     final responseText = _generateBotResponse(message);
     for (int i = 0; i <= responseText.length; i++) {
       await Future.delayed(const Duration(milliseconds: 30));
@@ -159,7 +197,6 @@ class ExpaController extends GetxController {
   }
 
   String _generateBotResponse(String userMessage) {
-    // Simple bot responses
     final responses = [
       "That's interesting! Tell me more.",
       "I understand. How can I assist you further?",
@@ -170,7 +207,7 @@ class ExpaController extends GetxController {
     return responses[DateTime.now().millisecond % responses.length];
   }
 
-  // Start audio recording
+  /// Audio recording start
   Future<void> startRecording() async {
     try {
       if (await _audioRecorder.hasPermission()) {
@@ -187,7 +224,6 @@ class ExpaController extends GetxController {
         isRecording.value = true;
         recordingDuration.value = 0;
 
-        // Start timer
         _recordingTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
           recordingDuration.value++;
         });
@@ -197,7 +233,7 @@ class ExpaController extends GetxController {
     }
   }
 
-  // Stop audio recording
+  /// Audio recording stop
   Future<void> stopRecording() async {
     try {
       final path = await _audioRecorder.stop();
@@ -216,6 +252,7 @@ class ExpaController extends GetxController {
           'audioDuration': _formatDuration(duration),
         });
 
+        userScrolling = false;
         await _saveMessages();
         _scrollToBottom();
 
@@ -261,9 +298,8 @@ class ExpaController extends GetxController {
   }
 
   String formatTime(DateTime time) {
-    final hour = time.hour > 12
-        ? time.hour - 12
-        : (time.hour == 0 ? 12 : time.hour);
+    final hour =
+    time.hour > 12 ? time.hour - 12 : (time.hour == 0 ? 12 : time.hour);
     final minute = time.minute.toString().padLeft(2, '0');
     final period = time.hour >= 12 ? 'PM' : 'AM';
     return '$hour:$minute $period';
@@ -315,8 +351,23 @@ class ExpaController extends GetxController {
         date1.day == date2.day;
   }
 
+  /// Initial scroll - jumps to bottom instantly without animation
+  void _scrollToBottomInitial() {
+    if (_hasPerformedInitialScroll) return;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (scrollController.hasClients) {
+        scrollController.jumpTo(scrollController.position.maxScrollExtent);
+        _hasPerformedInitialScroll = true;
+      }
+    });
+  }
+
+  /// Smart scroll function - only scrolls if user hasn't manually scrolled up
   void _scrollToBottom() {
-    Future.delayed(const Duration(milliseconds: 100), () {
+    if (userScrolling) return; // Don't auto-scroll if user is viewing old messages
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (scrollController.hasClients) {
         scrollController.animateTo(
           scrollController.position.maxScrollExtent,

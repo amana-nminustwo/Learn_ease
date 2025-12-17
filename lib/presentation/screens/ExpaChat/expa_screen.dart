@@ -11,7 +11,8 @@ class ExpaScreen extends StatelessWidget {
   ExpaScreen({super.key});
 
   final TextEditingController msgCtrl = TextEditingController();
-  final ExpaController ctrl = Get.put(ExpaController());
+  // final ExpaController ctrl = Get.put(ExpaController());
+  final ExpaController ctrl = Get.put(ExpaController(), tag: 'ExpaScreen', permanent: false);
   final FocusNode focusNode = FocusNode();
 
   @override
